@@ -25,7 +25,7 @@ import java.util.*
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 
 
-class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickListener, SearchView.OnQueryTextListener{
+class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickListener{
     private lateinit var binding: FragmentNewsBinding
     private lateinit var date:String
     private lateinit var adapter : NewsAdapter
@@ -44,6 +44,17 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
 
     private fun setListeners() {
         binding.btnReload.setOnClickListener { loadInfo() }
+        binding.search.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
     }
 
     private fun loadInfo(){
@@ -77,15 +88,4 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
         val action = NewsFragmentDirections.actionNewsFragmentToDetailFragment(news.image,news.title,date,news.body)
         findNavController().navigate(action)
     }
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        adapter.filter.filter(query)
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        adapter.filter.filter(newText)
-        return false
-    }
-
 }
