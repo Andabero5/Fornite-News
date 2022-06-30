@@ -1,4 +1,4 @@
-package com.example.fornitenews.ui
+package com.example.fornitenews.ui.newsDetails
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
