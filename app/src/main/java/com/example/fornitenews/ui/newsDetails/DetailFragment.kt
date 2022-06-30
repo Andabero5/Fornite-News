@@ -1,5 +1,6 @@
 package com.example.fornitenews.ui.newsDetails
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,5 +24,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         binding.txtTitle.text = args.title
         binding.txtDate.text = args.date
         binding.txtDescription.text = args.info
+        binding.btnShare.setOnClickListener { shareOptions() }
+    }
+
+    private fun shareOptions(){
+        val intent = Intent().apply{
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TITLE, args.title)
+            putExtra(Intent.EXTRA_TEXT, args.info)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(intent,args.title)
+        startActivity(shareIntent)
     }
 }
