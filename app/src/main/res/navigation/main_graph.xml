@@ -6,16 +6,30 @@
     app:startDestination="@id/newsFragment">
 
     <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.fornitenews.ui.newsDetails.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="image"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <argument
+            android:name="info"
+            app:argType="string" />
+    </fragment>
+    <fragment
         android:id="@+id/newsFragment"
         android:name="com.example.fornitenews.ui.news.NewsFragment"
-        android:label="NewsFragment" >
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" >
         <action
             android:id="@+id/action_newsFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.fornitenews.ui.newsDetails.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
 </navigation>
