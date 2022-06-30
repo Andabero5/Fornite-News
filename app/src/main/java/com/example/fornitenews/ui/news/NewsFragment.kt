@@ -1,17 +1,14 @@
 package com.example.fornitenews.ui.news
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavHost
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.example.fornitenews.R
 import com.example.fornitenews.core.Resource
 import com.example.fornitenews.data.model.News
@@ -19,15 +16,12 @@ import com.example.fornitenews.data.remote.NewsDataSource
 import com.example.fornitenews.databinding.FragmentNewsBinding
 import com.example.fornitenews.presentation.NewsViewModel
 import com.example.fornitenews.presentation.NewsViewModelFactory
-import com.example.fornitenews.repository.NewsRepository
 import com.example.fornitenews.repository.NewsRepositoryImpl
 import com.example.fornitenews.repository.RetrofitClient
-import com.example.fornitenews.ui.newsDetails.DetailFragment
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickListener {
     private lateinit var binding: FragmentNewsBinding
@@ -39,7 +33,11 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNewsBinding.bind(view)
+        loadInfo()
+        binding.btnReload.setOnClickListener { loadInfo() }
+    }
 
+    private fun loadInfo(){
         viewModel.getLatestNews().observe(viewLifecycleOwner) { result ->
             when(result){
                 is Resource.Loading ->{
@@ -54,6 +52,8 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
                     var aa = LocalDate.parse("2018-12-31")
                     changeFormatDate(result.data.info.date!!)
                     binding.rvNews.adapter = NewsAdapter(result.data.info.motds,this@NewsFragment)
+                    val snapHelper: SnapHelper = LinearSnapHelper()
+                    snapHelper.attachToRecyclerView(binding.rvNews)
                 }
             }
         }
