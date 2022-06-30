@@ -2,6 +2,7 @@ package com.example.fornitenews.ui.news
 
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,11 +22,13 @@ import com.example.fornitenews.repository.RetrofitClient
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 
 
-class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickListener {
+class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickListener, SearchView.OnQueryTextListener{
     private lateinit var binding: FragmentNewsBinding
     private lateinit var date:String
+    private lateinit var adapter : NewsAdapter
 
     private val viewModel by viewModels<NewsViewModel> { NewsViewModelFactory(NewsRepositoryImpl(
         NewsDataSource(RetrofitClient.webservice)
@@ -34,6 +37,12 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNewsBinding.bind(view)
         loadInfo()
+        setListeners()
+
+
+    }
+
+    private fun setListeners() {
         binding.btnReload.setOnClickListener { loadInfo() }
     }
 
@@ -51,7 +60,8 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
                     binding.progressBar.isVisible = false
                     var aa = LocalDate.parse("2018-12-31")
                     changeFormatDate(result.data.info.date!!)
-                    binding.rvNews.adapter = NewsAdapter(result.data.info.motds,this@NewsFragment)
+                    adapter = NewsAdapter(result.data.info.motds,this@NewsFragment)
+                    binding.rvNews.adapter = adapter
                     val snapHelper: SnapHelper = LinearSnapHelper()
                     snapHelper.attachToRecyclerView(binding.rvNews)
                 }
@@ -60,12 +70,22 @@ class NewsFragment : Fragment(R.layout.fragment_news), NewsAdapter.OnNewsClickLi
     }
 
     private fun changeFormatDate(date: Date){
-        SimpleDateFormat("DD-MMM-YYYY").format(date)
-        this.date = SimpleDateFormat("dd-MMMM-YYYY").format(date)
+        this.date = SimpleDateFormat("dd-MMMM-YYYY", Locale("es", "ES")).format(date)
     }
 
     override fun onNewsClick(news: News) {
         val action = NewsFragmentDirections.actionNewsFragmentToDetailFragment(news.image,news.title,date,news.body)
         findNavController().navigate(action)
     }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        adapter.filter.filter(query)
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        adapter.filter.filter(newText)
+        return false
+    }
+
 }
