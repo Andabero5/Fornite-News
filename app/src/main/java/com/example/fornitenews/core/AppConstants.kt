@@ -1,4 +1,4 @@
-package com.example.fornitenews.application
+package com.example.fornitenews.core
 
 object AppConstants {
     //API

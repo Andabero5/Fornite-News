@@ -22,7 +22,7 @@ class NewsViewModel(private val repo : NewsRepository):ViewModel() {
 
 class NewsViewModelFactory(private val repo : NewsRepository):ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(NewsRepository::class.java).newInstance()
+        return modelClass.getConstructor(NewsRepository::class.java).newInstance(repo)
     }
 
 }

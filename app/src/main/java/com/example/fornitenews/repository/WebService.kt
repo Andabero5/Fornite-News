@@ -1,6 +1,6 @@
 package com.example.fornitenews.repository
 
-import com.example.fornitenews.application.AppConstants
+import com.example.fornitenews.core.AppConstants
 import com.example.fornitenews.data.model.NewsList
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
