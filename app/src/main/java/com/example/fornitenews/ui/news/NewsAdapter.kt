@@ -56,13 +56,12 @@ class NewsAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint?.toString() ?: ""
+                val charString = constraint?.toString()?.lowercase() ?: ""
                 newsFilterList = if (charString.isEmpty()) newsList else {
                     val filteredList = mutableListOf<News>()
                     newsList
                         .filter {
-                            (it.title.contains(constraint!!)) or
-                                    (it.body.contains(constraint))
+                            (it.title.lowercase().contains(constraint!!))
                         }
                         .forEach { filteredList.add(it) }
                     filteredList
